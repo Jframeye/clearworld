@@ -1,0 +1,239 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh-cn">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>列表查询</title>
+
+		<link href="static/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+		<link href="static/iconic-font-2.2.0/css/material-design-iconic-font.min.css" rel="stylesheet"/>
+		<link href="static/waves-0.7.5/waves.min.css" rel="stylesheet"/>
+		<link href="static/scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet"/>
+		<link href="static/layui/css/layui.css" rel="stylesheet"/>
+
+		<link href="static/clearworld/css/clearworld.list.css" rel="stylesheet"/>
+	</head>
+
+	<body>
+		<div id="main">
+			<div class="layui-collapse" lay-filter="search">
+				<div class="layui-colla-item">
+					<h2 class="layui-colla-title">数据查询</h2>
+					<div class="layui-colla-content">
+						<form class="layui-form">
+							<div class="layui-form-item">
+								<div class="layui-input-inline" style="width: 50%;">
+									<div class="form-group">
+										<label>查询条件标签</label>
+										<input type="text" class="form-control">
+									</div>
+								</div>
+								<div class="layui-input-inline" style="width: 50%;">
+									<div class="form-group">
+										<label>查询条件标签</label>
+										<input type="text" class="form-control">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<div class="layui-input-inline">
+									<select name="interest" lay-filter="aihao">
+										<option value=""></option>
+										<option value="0">写作</option>
+										<option value="1" selected="">阅读</option>
+										<option value="2">游戏</option>
+										<option value="3">音乐</option>
+										<option value="4">旅行</option>
+									</select>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<div class="layui-input-inline" style="width: 50%;">
+									<input type="checkbox" name="like1[write]" lay-skin="primary" title="写作" checked="">
+									<input type="checkbox" name="like1[read]" lay-skin="primary" title="阅读">
+									<input type="checkbox" name="like1[game]" lay-skin="primary" title="游戏" disabled="">
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<div class="layui-input-inline" style="width: 50%;">
+									<input type="radio" name="sex" value="男" title="男" checked="">
+									<input type="radio" name="sex" value="女" title="女">
+									<input type="radio" name="sex" value="禁" title="禁用" disabled="">
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<div class="layui-input-inline">
+									<button class="layui-btn" lay-submit="" lay-filter="submit">查询</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="layui-collapse" lay-filter="list">
+				<div class="layui-colla-item">
+					<h2 class="layui-colla-title">数据列表</h2>
+					<div class="layui-colla-content">
+						<div id="toolbar">
+							<button class="waves-light layui-btn" id="insert" data-type="insert"><i class="zmdi zmdi-plus"></i> 新增</button>
+							<button class="waves-light layui-btn" id="update" data-type="update"><i class="zmdi zmdi-edit"></i> 编辑</button>
+							<button class="waves-light layui-btn" id="delete" data-type="delete"><i class="zmdi zmdi-close"></i> 删除</button>
+							<button class="waves-light layui-btn" id="import" data-type="import"><i class="zmdi zmdi-import-export"></i> 导入</button>
+							<button class="waves-light layui-btn" id="export" data-type="export"><i class="zmdi zmdi-import-export"></i> 导出</button>
+							<button class="waves-light layui-btn" id="reload" data-type="reload"><i class="zmdi zmdi-refresh"></i> 刷新</button>
+						</div>
+						<table id="table" lay-filter="table"></table>
+						<script type="text/html" id="innerBar">
+							<a class="layui-btn layui-btn-mini layui-btn-primary" lay-event="view">查看</a>
+							<a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
+							<a class="layui-btn layui-btn-mini layui-btn-danger" lay-event="dele">删除</a>
+						</script>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="static/jquery/jquery.1.12.4.min.js"></script>
+		<script src="static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+		<script src="static/waves-0.7.5/waves.min.js"></script>
+		<script src="static/scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+		<script src="static/layui/layui.js"></script>
+
+		<script src="static/clearworld/js/clearworld.list.js"></script>
+		<script>
+            layui.use(['table', 'form', 'element'], function(){
+                var $ = layui.$, table = layui.table, form = layui.form, element = layui.element;
+
+                //展示已知数据
+                table.render({
+                    elem: '#table',
+                    size: 'lg'
+                    ,url: '/data/data.json'
+                    ,cols: [[ //标题栏
+                        {checkbox: true, fixed: true, LAY_CHECKED: false} //默认全选
+                        ,{field: 'id', title: 'ID', width: 80, sort: true}
+                        ,{field: 'username', title: '用户名', width: 120}
+                        ,{field: 'email', title: '邮箱', width: 150}
+                        ,{field: 'sign', title: '签名', width: 150}
+                        ,{field: 'sex', title: '性别', width: 80}
+                        ,{field: 'city', title: '城市', width: 100}
+                        ,{field: 'experience', title: '积分', width: 80, sort: true}
+                        ,{fixed: 'right', width: 250, align:'center', toolbar: '#innerBar'}
+                    ]]
+					,id: 'table_list'
+                    ,skin: 'row' //表格风格
+                    ,even: true
+                    ,page: true //是否显示分页
+                    ,limits: [10]
+                    ,limit: 10 //每页默认显示的数量
+                });
+
+                //监听表格复选框选择
+                table.on('checkbox(table)', function(obj) {
+                    var checkStatus = table.checkStatus('table_list'); // table_list即为基础参数id对应的值
+
+                    console.log(checkStatus.data) //获取选中行的数据
+                    console.log(checkStatus.data.length) //获取选中行数量，可作为是否有选中行的条件
+                    console.log(checkStatus.isAll ) //表格是否全选
+
+                    console.log(obj.checked); //当前是否选中状态
+                    console.log(obj.data); //选中行的相关数据
+                    console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
+                });
+
+                //监听工具条
+                table.on('tool(table)', function(obj) { //注：tool是工具条事件名，table 是table原始容器的属性 lay-filter="对应的值"
+                    var data = obj.data; //获得当前行数据
+                    var layEvent = obj.event; //获得 lay-event 对应的值
+                    var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+                    if(layEvent === 'view'){ //查看
+                        //do somehing
+                    } else if(layEvent === 'dele'){ //删除
+                        layer.confirm('真的删除行么', function(index){
+                            obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                            layer.close(index);
+                            //向服务端发送删除指令
+                        });
+                    } else if(layEvent === 'edit'){ //编辑
+                        //do something
+
+                        //同步更新缓存对应的值
+                        obj.update({
+                            username: '123'
+                            ,title: 'xxx'
+                        });
+                    }
+                });
+
+                var action = {
+                    insert: function() {
+                        var index = layer.open({
+                            type: 2,
+                            title: '很多时候，我们想最大化看，比如像这个页面。',
+                            maxmin: true, //开启最大化最小化按钮
+                            content: 'editor.html'
+                        });
+                        layer.full(index);
+                    },
+                    update: function() {
+                        var checkStatus = table.checkStatus('table_list');
+                        if(checkStatus.data == undefined || heckStatus.data.length == 0) {
+                            layer.msg('请先选择一条需要修改的数据', { anim: 6, offset: '100px' });
+                        } else {
+                            layer.msg("update" + checkStatus.data.length);
+						}
+                    },
+                    delete: function() {
+                        var checkStatus = table.checkStatus('table_list');
+                        if(checkStatus.data == undefined || heckStatus.data.length == 0) {
+                            layer.msg('请至少选择一条需要删除的数据', { anim: 6, offset: '100px' });
+                        } else {
+                            layer.msg("delete" + checkStatus.data.length);
+                        }
+                    },
+                    import: function() {
+                        layer.msg("import" + checkStatus.data.length);
+                    },
+                    export: function() {
+                        // 能否获取列表数据
+                        var checkStatus = table.checkStatus('table_list');
+                        var btns = ['全部数据', '当前列表数据', '当前选择数据'];
+                        if(checkStatus.data == undefined || heckStatus.data.length == 0) {
+                            btns = ['全部数据', '当前列表数据'];
+                        }
+                        layer.msg('数据导出类型选择', { closeBtn: 1, time: 0, anim: 1, offset: '100px', btn: btns
+                            ,yes: function(index, layero){
+                                layer.msg("全部数据");
+                            }
+                            ,btn2: function(index, layero){
+                                layer.msg("当前列表数据");
+                                //return false // 开启该代码可禁止点击该按钮关闭
+                            }
+                            ,btn3: function(index, layero){
+                                layer.msg("当前选择数据");
+                                //return false // 开启该代码可禁止点击该按钮关闭
+                            }
+                        });
+                    },
+                    reload: function() {
+                        var demoReload = $('#demoReload');
+                        table.reload('table_list', {
+                            where: {
+                                key: {
+                                    id: demoReload.val()
+                                }
+                            }
+                        });
+                    }
+                };
+
+                $('#toolbar .layui-btn').on('click', function(){
+                    var type = $(this).data('type');
+                    action[type] ? action[type].call(this) : '';
+                });
+            });
+		</script>
+	</body>
+</html>
