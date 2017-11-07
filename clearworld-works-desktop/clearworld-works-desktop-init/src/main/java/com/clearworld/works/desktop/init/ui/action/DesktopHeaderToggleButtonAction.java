@@ -44,8 +44,8 @@ import com.xiaoye.clearworld.desktop.common.component._Button;
 import com.xiaoye.clearworld.desktop.common.layout.CustomFlowLayout;
 import com.xiaoye.clearworld.desktop.common.utils.DialogUtils;
 import com.xiaoye.clearworld.utils.FileUtils;
-import com.xiaoye.clearworld.utils.JAXBXmlUtils;
 import com.xiaoye.clearworld.utils.StringUtils;
+import com.xiaoye.clearworld.utils.XmlParserWithJAXBUtils;
 
 /**
  * @desc 工具栏按钮事件
@@ -83,7 +83,7 @@ public class DesktopHeaderToggleButtonAction implements ActionListener {
 			String command = event.getActionCommand();
 			switch (command) {
 			case "more_plugins":
-				pluginDialog = DialogUtils.showDialog(mainFrame, "插件列表", pluginManagerContainer(), false);
+				pluginDialog = DialogUtils.showDialog(mainFrame, "插件列表", pluginManagerContainer());
 				pluginDialog.setVisible(true);
 				break;
 			case "install_plugin_dialog":
@@ -121,7 +121,7 @@ public class DesktopHeaderToggleButtonAction implements ActionListener {
 	 */
 	private Component pluginManagerContainer() {
 		JPanel container = new JPanel(new BorderLayout());
-		container.setSize(600, 350);
+		container.setPreferredSize(new Dimension(600, 400));
 
 		JPanel pluginsPanel = new JPanel(new CustomFlowLayout(FlowLayout.LEFT, 10, 10));
 		for (PluginBean plugin : remainingPlugins) {
@@ -273,7 +273,7 @@ public class DesktopHeaderToggleButtonAction implements ActionListener {
 				allPlugins.add(installPlugin);
 				PluginBeans pluginBeans = new PluginBeans();
 				pluginBeans.setPlugins(allPlugins);
-				JAXBXmlUtils.convertBeanToXml(DesktopHeader.plugins_xml_path, pluginBeans);
+				XmlParserWithJAXBUtils.convertBeanToXml(DesktopHeader.plugins_xml_path, pluginBeans);
 			}
 		} catch (Exception e) {
 			DialogUtils.showExceptionMsg(mainFrame, e);

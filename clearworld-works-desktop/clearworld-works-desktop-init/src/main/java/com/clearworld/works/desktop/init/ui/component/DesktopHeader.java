@@ -18,7 +18,7 @@ import com.clearworld.works.desktop.init.ui.action.DesktopHeaderToggleButtonActi
 import com.clearworld.works.desktop.xmlbean.PluginBean;
 import com.clearworld.works.desktop.xmlbean.PluginBeans;
 import com.xiaoye.clearworld.desktop.common.utils.DialogUtils;
-import com.xiaoye.clearworld.utils.JAXBXmlUtils;
+import com.xiaoye.clearworld.utils.XmlParserWithJAXBUtils;
 
 /**
  * @desc 工具栏
@@ -66,7 +66,7 @@ public class DesktopHeader extends JToolBar implements ActionListener {
 	 */
 	private void loadingPlugins() {
 		try {
-			PluginBeans plugin = JAXBXmlUtils.convertXmlToBean(plugins_xml_path, PluginBeans.class);
+			PluginBeans plugin = XmlParserWithJAXBUtils.convertXmlToBean(plugins_xml_path, PluginBeans.class);
 			// 异步加载插件
 			SwingUtilities.invokeLater(() -> {
 				loadingPlugins(plugin.getPlugins());

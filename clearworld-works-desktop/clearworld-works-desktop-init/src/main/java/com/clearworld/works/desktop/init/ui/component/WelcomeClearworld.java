@@ -26,6 +26,6 @@ public class WelcomeClearworld extends JPanel {
 	 * 初始化
 	 */
 	private void initContainer() {
-		this.add(new JLabel(ImageUtils.getImageIcon("images/test.jpg")));
+		this.add(new JLabel(ImageUtils.getImageIcon("images/welcome.jpg")));
 	}
 }
