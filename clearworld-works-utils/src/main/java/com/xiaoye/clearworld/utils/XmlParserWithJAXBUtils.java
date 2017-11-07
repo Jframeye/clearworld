@@ -8,11 +8,11 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 /**
- * @Desc JAXB XML 工具类
+ * @Desc XML JAXB 工具类
  * @Author yehl
  * @Date 2017年11月2日
  */
-public class JAXBXmlUtils {
+public class XmlParserWithJAXBUtils {
 
 	/**
 	 * 将xml文件内容转化为JAXB Bean实体类
@@ -26,7 +26,7 @@ public class JAXBXmlUtils {
 		try {
 			JAXBContext context = JAXBContext.newInstance(clazz);
 			Unmarshaller unmarshaller = context.createUnmarshaller();
-			return (T) unmarshaller.unmarshal(JAXBXmlUtils.class.getClassLoader().getResourceAsStream(xmlPath));
+			return (T) unmarshaller.unmarshal(XmlParserWithJAXBUtils.class.getClassLoader().getResourceAsStream(xmlPath));
 		} catch (JAXBException exception) {
 			throw exception;
 		}
@@ -46,7 +46,7 @@ public class JAXBXmlUtils {
 			// output pretty printed
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-			marshaller.marshal(bean, new FileOutputStream(JAXBXmlUtils.class.getClassLoader().getResource(xmlOutPath).getPath()));
+			marshaller.marshal(bean, new FileOutputStream(XmlParserWithJAXBUtils.class.getClassLoader().getResource(xmlOutPath).getPath()));
 			// marshaller.marshal(bean, System.out); // 打印
 		} catch (Exception exception) {
 			throw exception;
