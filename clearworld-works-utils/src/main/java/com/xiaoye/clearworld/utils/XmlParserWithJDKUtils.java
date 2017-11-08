@@ -3,18 +3,27 @@
  */
 package com.xiaoye.clearworld.utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.EntityResolver;
@@ -374,5 +383,60 @@ public class XmlParserWithJDKUtils {
 		if (document == null) {
 			throw new RuntimeException("the xml document is null, please build xml by XmlXPathUtils.build method");
 		}
+	}
+
+	/**
+	 * 生成的文件路径
+	 * @param xmlPath
+	 */
+	public static void writeToXml(String xmlPath) {
+		try {
+			document.normalize();
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			// 编码
+			DOMSource source = new DOMSource(document);
+			PrintWriter pw = new PrintWriter(new FileOutputStream(xmlPath));
+			StreamResult result = new StreamResult(pw);
+			transformer.transform(source, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 生成的文件
+	 * @param file
+	 */
+	public static void writeToXml(File file) {
+		try {
+			document.normalize();
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			// 编码
+			DOMSource source = new DOMSource(document);
+			PrintWriter pw = new PrintWriter(new FileOutputStream(file));
+			StreamResult result = new StreamResult(pw);
+			transformer.transform(source, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String[] args) {
+		build("env.notify.sms.mysql.xml");
+		List<Node> nodes = evalNodes("//entry[@key='url']");
+		System.out.println(nodes.size());
+		for (Node node : nodes) {
+			Element element = (Element) node;
+			String value = element.getAttribute("value");
+			element.setAttribute("value", value.replace("10.91.19.10", "100.100.100.100"));
+			System.out.println(element.getAttribute("value"));
+		}
+		writeToXml("G:\\clearworld\\clearworld-works-utils\\src\\main\\resources\\env.notify.mysql.xml");
 	}
 }

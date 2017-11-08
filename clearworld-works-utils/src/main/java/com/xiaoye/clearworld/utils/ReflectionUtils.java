@@ -124,12 +124,28 @@ public abstract class ReflectionUtils {
 	 * semantics, the returned value is automatically wrapped if the underlying field
 	 * has a primitive type.
 	 * <p>Thrown exceptions are handled via a call to {@link #handleReflectionException(Exception)}.
+	 * @param fieldName the field to get
+	 * @param target the target object from which to get the field
+	 * @return the field's current value
+	 */
+	public static Object getField(String fieldName, Object target) {
+		Field field = findField(target.getClass(), fieldName);
+		return getField(field, target);
+	}
+
+	/**
+	 * Get the field represented by the supplied {@link Field field object} on the
+	 * specified {@link Object target object}. In accordance with {@link Field#get(Object)}
+	 * semantics, the returned value is automatically wrapped if the underlying field
+	 * has a primitive type.
+	 * <p>Thrown exceptions are handled via a call to {@link #handleReflectionException(Exception)}.
 	 * @param field the field to get
 	 * @param target the target object from which to get the field
 	 * @return the field's current value
 	 */
 	public static Object getField(Field field, Object target) {
 		try {
+			makeAccessible(field);
 			return field.get(target);
 		}
 		catch (IllegalAccessException ex) {

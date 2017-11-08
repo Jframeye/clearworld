@@ -3,7 +3,10 @@
  */
 package com.xiaoye.clearworld.utils;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,7 +18,9 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
@@ -223,6 +228,20 @@ public class XmlParserWithDom4Utils {
 		return result;
 	}
 
-	public static void main(String[] args) {
+	public static void writeToXml(String xmlPath) throws IOException {
+		FileOutputStream outputStream = new FileOutputStream(xmlPath);
+		OutputStreamWriter streamWriter = new OutputStreamWriter(outputStream, "UTF-8");
+		OutputFormat format = new OutputFormat();
+		format.setEncoding("UTF-8");
+		format.setIndent(true);
+		// format.setIndent(" ");
+		XMLWriter writer = new XMLWriter(streamWriter, format);
+		writer.write(document);
+		writer.close();
+	}
+
+	public static void main(String[] args) throws IOException {
+		build("env.notify.sms.mysql.xml");
+		writeToXml("E:\\text.xml");
 	}
 }
